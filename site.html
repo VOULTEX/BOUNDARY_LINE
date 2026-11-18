@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boundary Line | Cricket Happening Now</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --night: #0b1324;
+      --night-2: #121d35;
+      --ink: #e9eef7;
+      --muted: #9fb0cc;
+      --line: rgba(255, 255, 255, 0.10);
+      --pitch: #1f7a4a;
+      --ball: #c8102e;
+      --gold: #f4b63f;
+      --radius: 18px;
+      --display: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
+      --body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body);
+      background: var(--night);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; }
+    .wrap { width: min(1160px, 92%); margin: 0 auto; }
+
+    /* ---------- NAV ---------- */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11, 19, 36, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav .wrap {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--display); font-size: 28px; letter-spacing: 1px;
+      text-decoration: none;
+    }
+    .logo-ball {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ff4d5e, var(--ball) 60%, #7a0619);
+      position: relative;
+    }
+    .logo-ball::after {
+      content: ""; position: absolute; inset: 3px 11px;
+      border-left: 2px dashed rgba(255,255,255,0.8);
+      border-right: 2px dashed rgba(255,255,255,0.8);
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ---------- BUTTONS ---------- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 26px; border-radius: 999px;
+      font-weight: 700; font-size: 15px; text-decoration: none;
+      border: 2px solid transparent; cursor: pointer;
+      transition: transform .2s, box-shadow .2s, background .2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--gold); color: #1a1205; box-shadow: 0 10px 30px rgba(244,182,63,.35); }
+    .btn-primary:hover { box-shadow: 0 14px 36px rgba(244,182,63,.5); }
+    .btn-ghost { border-color: rgba(255,255,255,.35); color: var(--ink); }
+    .btn-ghost:hover { background: rgba(255,255,255,.08); }
+    .btn .arrow { transition: transform .2s; }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 110px 0 120px;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 0%, rgba(255,255,255,.14), transparent 70%),
+        radial-gradient(ellipse 60% 50% at 85% 0%, rgba(255,255,255,.12), transparent 70%),
+        linear-gradient(180deg, var(--night-2) 0%, var(--night) 100%);
+    }
+    /* outfield stripes */
+    .hero::before {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 38%;
+      background: repeating-linear-gradient(90deg, #17603a 0 80px, #1b6d42 80px 160px);
+      clip-path: ellipse(75% 100% at 50% 100%);
+      opacity: .55;
+    }
+    .hero .wrap { position: relative; z-index: 2; text-align: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: rgba(255,255,255,.08); border: 1px solid var(--line);
+      font-size: 13px; font-weight: 600; letter-spacing: .5px; color: var(--muted);
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #ff3b4f;
+      box-shadow: 0 0 0 0 rgba(255,59,79,.7); animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,59,79,.7); }
+      70% { box-shadow: 0 0 0 10px rgba(255,59,79,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,59,79,0); }
+    }
+    .hero h1 {
+      font-family: var(--display); font-weight: 400;
+      font-size: clamp(54px, 9vw, 112px); line-height: .95; letter-spacing: 1px;
+      margin: 22px 0 18px;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero p.lead { max-width: 640px; margin: 0 auto 36px; color: var(--muted); font-size: 18px; }
+    .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      max-width: 720px; margin: 64px auto 0;
+      background: var(--line); border: 1px solid var(--line); border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .stat { background: rgba(11,19,36,.75); padding: 20px 10px; }
+    .stat b { display: block; font-family: var(--display); font-size: 40px; font-weight: 400; line-height: 1; }
+    .stat small { color: var(--muted); font-size: 13px; }
+
+    /* ---------- SECTION HEADINGS ---------- */
+    section { padding: 90px 0; }
+    .section-head { text-align: center; margin-bottom: 50px; }
+    .section-head h2 {
+      font-family: var(--display); font-weight: 400; font-size: clamp(40px, 6vw, 64px); letter-spacing: 1px; line-height: 1;
+    }
+    .section-head p { color: var(--muted); margin-top: 10px; }
+
+    /* ---------- EVENT BANNERS ---------- */
+    .event {
+      display: grid; grid-template-columns: 1.05fr 1fr;
+      border-radius: 24px; overflow: hidden;
+      margin-bottom: 36px; border: 1px solid var(--line);
+      background: var(--night-2);
+    }
+    .event:nth-of-type(even) .banner { order: 2; }
+
+    .banner {
+      position: relative; min-height: 380px; padding: 36px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      overflow: hidden; isolation: isolate;
+    }
+    .banner::before, .banner::after { content: ""; position: absolute; z-index: -1; }
+    .banner .tag {
+      align-self: flex-start;
+      padding: 6px 12px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      background: rgba(0,0,0,.28); backdrop-filter: blur(4px);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .banner h3 {
+      font-family: var(--display); font-weight: 400;
+      font-size: clamp(46px, 6vw, 76px); line-height: .9; letter-spacing: 1px;
+      text-shadow: 0 4px 24px rgba(0,0,0,.25);
+    }
+    .banner .dates { font-weight: 600; font-size: 16px; opacity: .95; margin-top: 10px; }
+
+    /* Banner 1: WBBL - violet / pink */
+    .b-wbbl { background: linear-gradient(135deg, #5b21b6 0%, #db2777 100%); }
+    .b-wbbl::before {
+      width: 420px; height: 420px; right: -120px; top: -120px; border-radius: 50%;
+      border: 40px solid rgba(255,255,255,.10);
+    }
+    .b-wbbl::after {
+      width: 260px; height: 260px; right: 40px; bottom: -110px; border-radius: 50%;
+      background: rgba(255,255,255,.08);
+    }
+
+    /* Banner 2: T10 - desert gold */
+    .b-t10 { background: linear-gradient(160deg, #f59e0b 0%, #c2410c 60%, #7c2d12 100%); }
+    .b-t10::before {
+      left: -10%; right: -10%; bottom: -40px; height: 160px;
+      background: radial-gradient(ellipse at 30% 100%, rgba(124,45,18,.9) 0 55%, transparent 56%),
+                  radial-gradient(ellipse at 80% 100%, rgba(154,52,18,.8) 0 50%, transparent 51%);
+    }
+    .b-t10::after {
+      width: 130px; height: 130px; right: 50px; top: 40px; border-radius: 50%;
+      background: radial-gradient(circle, #fde68a 0 45%, rgba(253,230,138,.0) 70%);
+    }
+    .ten {
+      position: absolute; right: 26px; bottom: 6px; z-index: -1;
+      font-family: var(--display); font-size: 240px; line-height: 1; color: rgba(255,255,255,.12);
+    }
+
+    /* Banner 3: AUS v ENG - green & red split */
+    .b-odi {
+      background: linear-gradient(115deg, #0f5132 0%, #16794a 48%, #b91c1c 52%, #7f1d1d 100%);
+    }
+    .b-odi::before {
+      width: 22px; left: calc(50% - 11px); top: -20px; bottom: -20px;
+      background: repeating-linear-gradient(180deg, #f8f1e4 0 46px, transparent 46px 60px);
+      transform: skewX(-25deg); opacity: .25;
+    }
+    .vs-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .team-chip {
+      font-family: var(--display); font-size: 54px; line-height: 1; letter-spacing: 2px;
+      background: rgba(0,0,0,.25); padding: 10px 18px; border-radius: 14px;
+    }
+    .vs {
+      font-family: var(--display); font-size: 28px;
+      width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
+      background: #fff; color: #111; flex-shrink: 0;
+    }
+
+    /* Event details panel */
+    .details { padding: 36px 38px; display: flex; flex-direction: column; }
+    .details .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .details h4 { font-size: 24px; margin: 6px 0 12px; line-height: 1.25; }
+    .details p { color: var(--muted); font-size: 15px; }
+    .facts {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin: 22px 0; list-style: none;
+    }
+    .facts li {
+      background: rgba(255,255,255,.04); border: 1px solid var(--line);
+      border-radius: 12px; padding: 12px 14px;
+    }
+    .facts span { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+    .facts strong { font-size: 15px; }
+
+    .fixtures { list-style: none; margin-bottom: 24px; }
+    .fixtures li {
+      display: flex; justify-content: space-between; gap: 12px;
+      padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 14px;
+    }
+    .fixtures li:last-child { border-bottom: 0; }
+    .fixtures em { font-style: normal; color: var(--muted); text-align: right; }
+    .pill-live {
+      background: #ff3b4f; color: #fff; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px; margin-left: 6px; letter-spacing: .5px;
+    }
+    .teams { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .teams span {
+      font-size: 13px; padding: 6px 12px; border-radius: 999px;
+      background: rgba(255,255,255,.06); border: 1px solid var(--line);
+    }
+    .details .btn { margin-top: auto; align-self: flex-start; }
+
+    /* ---------- TEAM BANNERS ---------- */
+    .team-row {
+      grid-column: 1 / -1; order: 3;
+      border-top: 1px solid var(--line);
+      padding: 26px 38px 32px;
+      background: rgba(0,0,0,.18);
+    }
+    .team-row h5 {
+      font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 16px;
+    }
+    .team-grid {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    .team-grid.two { grid-template-columns: repeat(2, 1fr); }
+    .team-grid.four { grid-template-columns: repeat(4, 1fr); }
+    .team-grid.six { grid-template-columns: repeat(6, 1fr); }
+    @media (max-width: 900px) {
+      .team-grid.four, .team-grid.six { grid-template-columns: repeat(3, 1fr); }
+    }
+    .team-card {
+      position: relative; overflow: hidden; isolation: isolate;
+      border-radius: 14px; padding: 18px 16px 16px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      transition: transform .2s, border-color .2s;
+    }
+    .team-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.35); }
+    /* diagonal pennant stripe */
+    .team-card::before {
+      content: ""; position: absolute; z-index: -1;
+      width: 160%; height: 40px; left: -30%; top: 58%;
+      background: rgba(255,255,255,.07); transform: rotate(-14deg);
+    }
+    /* Logo slot: replace the initials with <img src="your-logo.png" alt="Team name">
+       ONLY if you have permission to use the official logo. */
+    .logo-slot {
+      width: 54px; height: 54px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: rgba(255,255,255,.95); color: #111;
+      font-family: var(--display); font-size: 22px; letter-spacing: 1px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.3);
+      overflow: hidden;
+    }
+    .logo-slot img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+    .team-card strong { font-size: 15px; line-height: 1.25; }
+    .team-card small { font-size: 12px; opacity: .85; margin-top: -8px; }
+    .badge-champ {
+      position: absolute; top: 10px; right: 10px;
+      font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      background: var(--gold); color: #1a1205; padding: 3px 8px; border-radius: 999px;
+    }
+    .tc-wbbl { background: linear-gradient(150deg, #4c1d95, #9d174d); }
+    .tc-t10  { background: linear-gradient(150deg, #b45309, #7c2d12); }
+    .tc-aus  { background: linear-gradient(150deg, #166534, #14532d); }
+    .tc-eng  { background: linear-gradient(150deg, #b91c1c, #7f1d1d); }
+    .team-grid.two .team-card { flex-direction: row; align-items: center; padding: 22px; gap: 18px; }
+    .team-grid.two .team-card .logo-slot { width: 72px; height: 72px; font-size: 26px; }
+    .team-grid.two .team-card small { margin-top: 0; display: block; }
+
+    .k-wbbl { color: #f472b6; }
+    .k-t10 { color: #fbbf24; }
+    .k-odi { color: #4ade80; }
+
+    /* ---------- CTA STRIP ---------- */
+    .cta-strip {
+      border-radius: 24px; padding: 56px 40px; text-align: center;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(244,182,63,.25), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(200,16,46,.25), transparent 40%),
+        var(--night-2);
+      border: 1px solid var(--line);
+    }
+    .cta-strip h2 { font-family: var(--display); font-weight: 400; font-size: clamp(38px, 5vw, 58px); line-height: 1; }
+    .cta-strip p { color: var(--muted); margin: 12px auto 28px; max-width: 560px; }
+
+    /* ---------- FOOTER ---------- */
+    footer { border-top: 1px solid var(--line); padding: 30px 0; color: var(--muted); font-size: 13px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      .event { grid-template-columns: 1fr; }
+      .event:nth-of-type(even) .banner { order: 0; }
+      .banner { min-height: 300px; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 520px) {
+      .stats { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: 1fr; }
+      .details { padding: 28px 24px; }
+      .banner { padding: 26px; }
+      .team-chip { font-size: 40px; }
+      .ten { font-size: 170px; }
+      .team-row { padding: 22px 20px 26px; }
+      .team-grid, .team-grid.four, .team-grid.six { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .logo { font-size: 22px; white-space: nowrap; }
+      .nav .btn { padding: 8px 14px !important; font-size: 12px !important; white-space: nowrap; }
+      .team-grid.two { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap">
+      <a href="#" class="logo"><span class="logo-ball"></span>Boundary Line</a>
+      <ul class="nav-links">
+        <li><a href="#wbbl">Women's Big Bash</a></li>
+        <li><a href="#t10">Abu Dhabi T10</a></li>
+        <li><a href="#odi">AUS v ENG</a></li>
+      </ul>
+      <a href="#events" class="btn btn-primary" style="padding:10px 20px;font-size:14px;">Get More Info</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow"><span class="live-dot"></span> November 2026 · Cricket on right now</span>
+      <h1>Three tournaments.<br><span>One cricket feed.</span></h1>
+      <p class="lead">Women's T20 in Australia, ten-over cricket in Abu Dhabi and an England tour of Australia. Dates, venues, formats and fixtures for all three, in one place.</p>
+      <div class="hero-ctas">
+        <a href="#events" class="btn btn-primary">Get More Info <span class="arrow">→</span></a>
+        <a href="#odi" class="btn btn-ghost">Today's ODI</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b>3</b><small>Tournaments on now</small></div>
+        <div class="stat"><b>16</b><small>Teams in action</small></div>
+        <div class="stat"><b>78</b><small>Matches this season</small></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- EVENTS -->
+  <section id="events">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What's On</h2>
+        <p>The three events to follow this month</p>
+      </div>
+
+      <!-- 1. WBBL -->
+      <article class="event" id="wbbl">
+        <div class="banner b-wbbl">
+          <span class="tag"><span class="live-dot"></span> Season in progress</span>
+          <div>
+            <h3>Women's<br>Big Bash<br>League</h3>
+            <div class="dates">29 Oct – 5 Dec 2026 · Australia</div>
+          </div>
+        </div>
+        <div class="details">
+          <span class="kicker k-wbbl">WBBL|12 · Women's T20</span>
+          <h4>Eight clubs chase the title in the 12th season</h4>
+          <p>The Hobart Hurricanes start as defending champions. They beat the Perth Scorchers by eight wickets in last season's final. The season opened with a double-header at Junction Oval in Melbourne.</p>
+          <ul class="facts">
+            <li><span>Teams</span><strong>8</strong></li>
+            <li><span>Matches</span><strong>43 (40 league + 3 finals)</strong></li>
+            <li><span>Defending champions</span><strong>Hobart Hurricanes</strong></li>
+            <li><span>Format</span><strong>T20, double round-robin</strong></li>
+          </ul>
+          <ul class="fixtures">
+            <li>Knockout (3rd v 4th) <em>Tue 1 Dec</em></li>
+            <li>Challenger <em>Thu 3 Dec</em></li>
+            <li><strong>The Final</strong> <em>Sat 5 Dec</em></li>
+          </ul>
+          <a href="https://www.espn.in/cricket/scores/series/21284" target="_blank" rel="noopener" class="btn btn-primary">Get More Info <span class="arrow">→</span></a>
+        </div>
+        <div class="team-row">
+          <h5>The 8 teams</h5>
+          <div class="team-grid four">
+            <div class="team-card tc-wbbl"><div class="logo-slot">AS</div><strong>Adelaide Strikers</strong><small>Adelaide</small></div>
+            <div class="team-card tc-wbbl"><div class="logo-slot">BH</div><strong>Brisbane Heat</strong><small>Brisbane</small></div>
+            <div class="team-card tc-wbbl"><span class="badge-champ">Champions</span><div class="logo-slot">HH</div><strong>Hobart Hurricanes</strong><small>Hobart</small></div>
+            <div class="team-card tc-wbbl"><div class="logo-slot">MR</div><strong>Melbourne Renegades</strong><small>Melbourne</small></div>
+            <div class="team-card tc-wbbl"><div class="logo-slot">MS</div><strong>Melbourne Stars</strong><small>Melbourne</small></div>
+            <div class="team-card tc-wbbl"><div class="logo-slot">PS</div><strong>Perth Scorchers</strong><small>Perth</small></div>
+            <div class="team-card tc-wbbl"><div class="logo-slot">SS</div><strong>Sydney Sixers</strong><small>Sydney</small></div>
+            <div class="team-card tc-wbbl"><div class="logo-slot">ST</div><strong>Sydney Thunder</strong><small>Sydney</small></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2. ABU DHABI T10 -->
+      <article class="event" id="t10">
+        <div class="banner b-t10">
+          <span class="ten">10</span>
+          <span class="tag"><span class="live-dot"></span> Final this Friday</span>
+          <div>
+            <h3>Abu Dhabi<br>T10</h3>
+            <div class="dates">7 – 20 Nov 2026 · Zayed Cricket Stadium</div>
+          </div>
+        </div>
+        <div class="details">
+          <span class="kicker k-t10">Season X · 10 overs a side</span>
+          <h4>A relaunched tournament in its 10th season</h4>
+          <p>Abu Dhabi Cricket &amp; Sports Hub now owns and runs the tournament. All 32 matches are at one ground. The UAE Bulls are defending the title they won in 2025.</p>
+          <ul class="facts">
+            <li><span>Teams</span><strong>6</strong></li>
+            <li><span>Matches</span><strong>32</strong></li>
+            <li><span>Defending champions</span><strong>UAE Bulls</strong></li>
+            <li><span>Playoffs</span><strong>1st to final · 2nd v 3rd qualifier</strong></li>
+          </ul>
+          <a href="https://www.thenationalnews.com/sport/cricket/2026/11/03/abu-dhabi-t10-everything-you-need-to-know-about-revamped-2026-tournament/" target="_blank" rel="noopener" class="btn btn-primary">Get More Info <span class="arrow">→</span></a>
+        </div>
+        <div class="team-row">
+          <h5>The 6 teams</h5>
+          <div class="team-grid six">
+            <div class="team-card tc-t10"><div class="logo-slot">AA</div><strong>Arabian Aces</strong></div>
+            <div class="team-card tc-t10"><div class="logo-slot">EE</div><strong>Emirates Eagles</strong></div>
+            <div class="team-card tc-t10"><div class="logo-slot">RD</div><strong>Royal Desert Champions</strong></div>
+            <div class="team-card tc-t10"><span class="badge-champ">Champions</span><div class="logo-slot">UB</div><strong>UAE Bulls</strong></div>
+            <div class="team-card tc-t10"><div class="logo-slot">UT</div><strong>United Tigers</strong></div>
+            <div class="team-card tc-t10"><div class="logo-slot">YL</div><strong>Yas Lions</strong></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3. AUS v ENG ODIs -->
+      <article class="event" id="odi">
+        <div class="banner b-odi">
+          <span class="tag"><span class="live-dot"></span> 3rd ODI live today</span>
+          <div class="vs-row">
+            <span class="team-chip">AUS</span>
+            <span class="vs">VS</span>
+            <span class="team-chip">ENG</span>
+          </div>
+          <div>
+            <h3>ODI Series</h3>
+            <div class="dates">13 – 18 Nov 2026 · Perth · Adelaide · Hobart</div>
+          </div>
+        </div>
+        <div class="details">
+          <span class="kicker k-odi">England tour of Australia · 50 overs</span>
+          <h4>Mitchell Marsh's Australia v Harry Brook's England</h4>
+          <p>The three ODIs open England's white-ball tour of Australia. Both teams are preparing for the 2027 ODI World Cup. Five T20Is follow, starting at the MCG on 21 November.</p>
+          <ul class="fixtures">
+            <li>1st ODI · Perth Stadium <em>Fri 13 Nov · 9:00 AM IST</em></li>
+            <li>2nd ODI · Adelaide Oval <em>Sun 15 Nov · 9:00 AM IST</em></li>
+            <li>3rd ODI · Bellerive Oval, Hobart <span class="pill-live">LIVE</span> <em>Wed 18 Nov · 9:00 AM IST</em></li>
+          </ul>
+          <ul class="facts">
+            <li><span>Captains</span><strong>Marsh / Brook</strong></li>
+            <li><span>Up next</span><strong>5 T20Is from 21 Nov</strong></li>
+          </ul>
+          <a href="https://www.cricket.com.au/matches/series/CA:4603/australia-v-england-odis-2026-men" target="_blank" rel="noopener" class="btn btn-primary">Get More Info <span class="arrow">→</span></a>
+        </div>
+        <div class="team-row">
+          <h5>The 2 teams</h5>
+          <div class="team-grid two">
+            <div class="team-card tc-aus"><div class="logo-slot">AUS</div><div><strong>Australia</strong><small>Captain: Mitchell Marsh · Hosts</small></div></div>
+            <div class="team-card tc-eng"><div class="logo-slot">ENG</div><div><strong>England</strong><small>Captain: Harry Brook · Touring</small></div></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="cta-strip">
+        <h2>Never miss a ball</h2>
+        <p>Find full fixtures, squads and live scores for every tournament on this page.</p>
+        <a href="#events" class="btn btn-primary">Get More Info <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Boundary Line · Cricket info &amp; promotions</span>
+      <span>Schedules may change. Check official sources for match times.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
